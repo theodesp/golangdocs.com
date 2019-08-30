@@ -3,6 +3,7 @@ GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 PACKAGES ?= $(shell $(GO) list ./... | grep -v /vendor/)
 IMAGE := theodesp/golangdocs.com
+VERSION ?= $(shell grep "APP_VERSION" Dockerfile | cut -d " " -f3)
 
 all: test-all
 
@@ -28,7 +29,7 @@ vet:
 
 # Test fast
 test-fast:
-	go test -short ./...
+	$(GO) test -short ./...
 
 .PHONY: fmt
 fmt:
@@ -45,10 +46,11 @@ install:
 
 .PHONY: image
 image:
-	docker build -t ${IMAGE}:${VERSION} .
-	docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest
+	docker build --pull --cache-from "${IMAGE}" --tag "${IMAGE}" .
 
 .PHONY: push-image
 push-image:
+	docker tag "${IMAGE}" "${IMAGE}:latest"
+	docker tag "${IMAGE}" "${IMAGE}:${VERSION}"
 	docker push ${IMAGE}:${VERSION}
 	docker push ${IMAGE}:latest
