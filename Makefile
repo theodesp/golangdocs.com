@@ -31,3 +31,7 @@ fmt:
 .PHONY: clean
 clean:
 	$(GO) clean ./...
+
+.PHONY: install
+install:
+	GOPATH=$(GOPATH) go get -u github.com/stretchr/testify
