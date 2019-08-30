@@ -3,11 +3,13 @@ GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 PACKAGES ?= $(shell $(GO) list ./... | grep -v /vendor/)
 
-all: test
+all: test-all
+
+test-all: test-lint test
 
 .PHONY: test
 test:
-	-rm coverage.txt
+	-rm coverage.out
 	@for package in $(PACKAGES) ; do \
 		$(GO) test -race -coverprofile=profile.out -covermode=atomic $$package ; \
 		if [ -f profile.out ]; then \
@@ -15,6 +17,10 @@ test:
 			rm profile.out ; \
 		fi \
 	done
+
+.PHONY: test-lint
+test-lint:
+	golangci-lint run ./...
 
 vet:
 	$(GO) vet $(PACKAGES)

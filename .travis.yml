@@ -19,12 +19,17 @@ git:
 
 before_install:
   - if [[ "${GO111MODULE}" = "on" ]]; then mkdir "${HOME}/go"; export GOPATH="${HOME}/go"; fi
+  - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.17.1
 
 install:
   - if [[ "${GO111MODULE}" = "on" ]]; then go mod download; else make install; fi
   - if [[ "${GO111MODULE}" = "on" ]]; then export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"; fi
 
 go_import_path: github.com/theodesp/golangdocs.com
+
+script:
+  - make vet
+  - make all
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
