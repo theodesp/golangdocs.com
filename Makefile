@@ -46,7 +46,9 @@ install:
 
 .PHONY: image
 image:
-	docker build --pull --cache-from "${IMAGE}" --tag "${IMAGE}" .
+	@if [ "${DEPLOY}" = "true" ]; then\
+		docker build --pull --cache-from "${IMAGE}" --tag "${IMAGE}" .;\
+	fi
 
 .PHONY: push-image
 push-image:
