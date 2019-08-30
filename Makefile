@@ -2,6 +2,7 @@ GO ?= go
 GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 PACKAGES ?= $(shell $(GO) list ./... | grep -v /vendor/)
+IMAGE := theodesp/golangdocs.com
 
 all: test-all
 
@@ -41,3 +42,13 @@ clean:
 .PHONY: install
 install:
 	$(GO) get -u github.com/stretchr/testify
+
+.PHONY: image
+image:
+	docker build -t ${IMAGE}:${VERSION} .
+	docker tag ${IMAGE}:${VERSION} ${IMAGE}:latest
+
+.PHONY: push-image
+push-image:
+	docker push ${IMAGE}:${VERSION}
+	docker push ${IMAGE}:latest
