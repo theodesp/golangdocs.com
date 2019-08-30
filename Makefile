@@ -11,7 +11,7 @@ test-all: test-lint test
 
 .PHONY: test
 test:
-	-rm coverage.out
+	-rm -f coverage.out
 	@for package in $(PACKAGES) ; do \
 		$(GO) test -race -coverprofile=profile.out -covermode=atomic $$package ; \
 		if [ -f profile.out ]; then \
