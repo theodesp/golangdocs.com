@@ -40,4 +40,4 @@ clean:
 
 .PHONY: install
 install:
-	GOPATH=$(GOPATH) go get -u github.com/stretchr/testify
+	$(GO) get -u github.com/stretchr/testify

@@ -6,7 +6,6 @@ os:
 matrix:
   fast_finish: true
   include:
-    - go: 1.10.x
     - go: 1.11.x
       env: GO111MODULE=on
     - go: 1.12.x
@@ -18,12 +17,12 @@ git:
   depth: 10
 
 before_install:
-  - if [[ "${GO111MODULE}" = "on" ]]; then mkdir "${HOME}/go"; export GOPATH="${HOME}/go"; fi
+  - mkdir "${HOME}/go"; export GOPATH="${HOME}/go";
   - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.17.1
 
 install:
-  - if [[ "${GO111MODULE}" = "on" ]]; then go mod download; else make install; fi
-  - if [[ "${GO111MODULE}" = "on" ]]; then export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"; fi
+  - go mod download
+  - export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 
 go_import_path: github.com/theodesp/golangdocs.com
 
