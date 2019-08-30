@@ -21,7 +21,7 @@ test:
 
 .PHONY: test-lint
 test-lint:
-	golangci-lint run ./...
+	golangci-lint run $(GOFILES)
 
 vet:
 	$(GO) vet $(PACKAGES)
