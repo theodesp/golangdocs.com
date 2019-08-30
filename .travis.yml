@@ -11,11 +11,17 @@ matrix:
   fast_finish: true
   include:
     - go: 1.11.x
-      env: GO111MODULE=on
+      env:
+        - GO111MODULE=on
+        - DEPLOY=false
     - go: 1.12.x
-      env: GO111MODULE=on
+      env:
+        - GO111MODULE=on
+        - DEPLOY=true
     - go: master
-      env: GO111MODULE=on
+      env:
+        - GO111MODULE=on
+        - DEPLOY=false
   allow_failures:
     - go: master
 
@@ -26,6 +32,11 @@ addons:
   apt:
     packages:
       - docker-ce
+
+stages:
+  - name: deploy
+    # require the branch name to be master (note for PRs this is the base branch name)
+    if: env(DEPLOY) = true
 
 before_install:
   - mkdir "${HOME}/go"; export GOPATH="${HOME}/go";
