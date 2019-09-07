@@ -17,6 +17,10 @@ matrix:
     - go: 1.12.x
       env:
         - GO111MODULE=on
+        - DEPLOY=false
+    - go: 1.13.x
+      env:
+        - GO111MODULE=on
         - DEPLOY=true
     - go: master
       env:

@@ -1,4 +1,4 @@
-FROM golang:1.12 as builder
+FROM golang:1.13 as builder
 
 # Add Maintainer Info
 LABEL maintainer="Theo Despoudis"
@@ -16,16 +16,17 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN CGO_ENABLED=0 GOOS=linux GOPROXY=https://proxy.golang.org go build -a -installsuffix cgo -o main .
 
 ######## Start a new stage from scratch #######
 FROM alpine:latest
 
 ENV APP_VERSION 0.0.1
 
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates && addgroup -S app && adduser -S app -G app
 
-WORKDIR /root/
+USER app
+WORKDIR /app
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
